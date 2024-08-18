@@ -5,6 +5,9 @@
 #include "OTA.h"
 #include "helpers.h"
 #include "logging.h"
+#include "../../src/rx-serial/SerialMavlink.h"
+extern void setTargetSysId(uint8_t sysID);
+extern void setThisSysId(uint8_t sysID);
 
 #if defined(TARGET_TX)
 
@@ -1232,6 +1235,25 @@ void RxConfig::SetBindStorage(rx_config_bindstorage_t value)
         // If switching away from returnable, revert
         ReturnLoan();
         m_config.bindStorage = value;
+        m_modified = true;
+    }
+}
+
+void RxConfig::SetTargetSysId(uint8_t value)
+{
+    if (m_config.targetSysId != value)
+    {
+        setTargetSysId(value);
+        m_config.targetSysId = value;
+        m_modified = true;
+    }
+}
+void RxConfig::SetSourceSysId(uint8_t value)
+{
+    if (m_config.sourceSysId != value)
+    {
+        setThisSysId(value);
+        m_config.sourceSysId = value;
         m_modified = true;
     }
 }
